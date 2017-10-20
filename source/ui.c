@@ -6,6 +6,7 @@
 #include "pp2d/pp2d.h"
 #include "filestuff.h"
 #include "ui.h"
+#include "backup.h"
 
 #define WHITE    RGBA8(255, 255, 255, 255)
 #define GREY     RGBA8(255, 120, 120, 120)
@@ -82,6 +83,10 @@ void uiRun(uistruct* us) {
     int max;
     int response;
     short add;
+    
+    char prompt[255];
+    char path[255];
+    
     pp2d_set_screen_color(GFX_TOP, GREY);
     
     while (aptMainLoop()) {
@@ -111,7 +116,15 @@ void uiRun(uistruct* us) {
                 us->indexPos = us->indexPos - 13;
                 break;
             case KEY_A:
-                uiError("BOTTOM TEXT");
+                memset(prompt, 0, sizeof(prompt));
+                snprintf(prompt, 255, "Replace boot.firm with %s?", us->entries[us->entryIndex]);
+                response = uiPrompt(prompt);
+                if (response == 0) {
+                    memset(path, 0, sizeof(path));
+                    snprintf(path, 255, "/3ds/data/PayloadSpinner3DS/%s", us->entries[us->entryIndex]);
+                    backup(path);
+                }
+                
                 break;
             case KEY_START:
                 return;

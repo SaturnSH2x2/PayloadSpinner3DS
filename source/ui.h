@@ -14,5 +14,6 @@ void cls();
 void uiInit(uistruct* us);
 int uiPrompt(const char* prompt);
 void uiRun(uistruct* us);
+void uiError(const char* error);
 
 #endif
