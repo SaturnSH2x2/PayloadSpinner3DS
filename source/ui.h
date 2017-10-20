@@ -7,6 +7,7 @@ typedef struct uistruct {
     int entryIndex;
     
     int holdTimer;
+    int indexPos;
 } uistruct;
 
 void cls();

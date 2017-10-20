@@ -4,13 +4,12 @@
 
 #include <3ds.h>
 #include "ui.h"
+#include "pp2d/pp2d.h"
 
 int main(int argc, char **argv) {
 
-	gfxInitDefault();
-	consoleInit(GFX_TOP, NULL);
-
-	printf("Hello 3DS World!");
+	pp2d_init();
+    consoleInit(GFX_BOTTOM, NULL);
 
     uistruct* us = malloc(sizeof(uistruct));
     
@@ -19,6 +18,6 @@ int main(int argc, char **argv) {
     
     free(us);
 
-	gfxExit();
+	pp2d_exit();
 	return 0;
 }
