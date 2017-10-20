@@ -60,8 +60,10 @@ int copyFile(const char* src, const char* dst) {
     printf("filesize is %d\n", size);
     fseek(s, 0, SEEK_SET);
     
-    fileData = malloc(size);
+    // https://stackoverflow.com/a/19247565/8732627
+    fileData = malloc(size + 1);
     fread(fileData, 1, size, s);
+    fileData[size] = '\0';
     fclose(s);
     
     printf("%s", fileData);

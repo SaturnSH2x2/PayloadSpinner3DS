@@ -3,6 +3,7 @@
 
 int backup(const char* path) {
     int result;
+    remove("/boot.firm.bak");
     result = rename("/boot.firm", "/boot.firm.bak");
     if (result != 0) {
        result = uiPrompt("Could not back up boot.firm. Continue?");
