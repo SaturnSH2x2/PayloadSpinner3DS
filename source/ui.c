@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <3ds.h>
 
 #include "pp2d/pp2d.h"
@@ -59,9 +60,27 @@ int uiPrompt(const char* prompt) {
     return result;
 }
 
+void uiError(const char* error) {
+    pp2d_set_screen_color(GFX_TOP, GREY);
+    
+    while (aptMainLoop()) {
+        hidScanInput();
+        u32 kDown = hidKeysDown();
+        
+        if (kDown)
+            break;
+        
+        pp2d_begin_draw(GFX_TOP);
+            pp2d_draw_text_center(GFX_TOP, 100, 0.5f, 0.5f, WHITE, error);
+            pp2d_draw_text_center(GFX_TOP, 200, 0.5f, 0.5f, WHITE, "Press any key to continue.");
+        pp2d_end_draw();
+    }
+}
+
 // really, it's just the main application loop
 void uiRun(uistruct* us) {
     int max;
+    int response;
     short add;
     pp2d_set_screen_color(GFX_TOP, GREY);
     
@@ -92,7 +111,7 @@ void uiRun(uistruct* us) {
                 us->indexPos = us->indexPos - 13;
                 break;
             case KEY_A:
-                uiPrompt("BOTTOM TEXT");
+                uiError("BOTTOM TEXT");
                 break;
             case KEY_START:
                 return;
