@@ -37,12 +37,12 @@ int uiPrompt(const char* prompt) {
         
         // update
         hidScanInput();
-        u32 kUp = hidKeysUp();
+        u32 kDown = hidKeysDown();
         
-        if (kUp & KEY_B) {
+        if (kDown & KEY_B) {
             result = -1;
             break;
-        } else if (kUp & KEY_A) {
+        } else if (kDown & KEY_A) {
             result = 0;
             break;
         }
@@ -80,6 +80,17 @@ void uiRun(uistruct* us) {
                 us->entryIndex++;
                 add = 1;
                 break;
+            case KEY_RIGHT:
+                us->entryIndex = us->entryIndex + 13;
+                if ((us->entryIndex >= us->entryCount) && us->indexPos != ((int)ceil((float)us->entryCount / 13.0) - 1) * 13) {
+                    us->entryIndex = us->entryCount - 1;
+                }
+                us->indexPos = us->indexPos + 13;
+                break;
+            case KEY_LEFT:
+                us->entryIndex = us->entryIndex - 13;
+                us->indexPos = us->indexPos - 13;
+                break;
             case KEY_A:
                 uiPrompt("BOTTOM TEXT");
                 break;
@@ -115,14 +126,14 @@ void uiRun(uistruct* us) {
         // display
         pp2d_begin_draw(GFX_TOP);
             // clear
-            pp2d_draw_rectangle(0, 0, 400, 240, GREYFG);
+            //pp2d_draw_rectangle(0, 0, 400, 240, GREYFG);
         
             // entry drawing
             max = ((us->indexPos + 13) < us->entryCount) ? us->indexPos + 13 : us->entryCount;
             printf("max index: %d\n", max);
             for (int i = us->indexPos; i < max; i++) {
                 if (i == us->entryIndex)
-                    pp2d_draw_rectangle(0, ((i % 13) * 15) + 20, 400, 15, BLACK);
+                    pp2d_draw_rectangle(0, ((i % 13) * 15) + 20, 400, 15, GREYFG);
                 pp2d_draw_text(0, ((i % 13) * 15) + 20, 0.5f, 0.5f, WHITE, us->entries[i]);
             }            
         pp2d_end_draw();
