@@ -1,5 +1,9 @@
 #ifndef BACKUP_H
 #define BACKUP_H
+  
+void rebootSystem() {
+    APT_HardwareResetAsync();
+}
 
 int backup(const char* path) {
     int result;
@@ -12,13 +16,16 @@ int backup(const char* path) {
     }
     
     result = copyFile(path, "/boot.firm");
-    if (result == 0)
-        uiError("Replacement successful.");
-    else
+    if (result == 0) {
+        result = uiPrompt("boot.firm replaced. Reboot now?");
+        if (result == 0)
+            rebootSystem();
+    } else
         uiError("Replacement failed.");
     
     return result;
 }
-        
+      
+
 
 #endif

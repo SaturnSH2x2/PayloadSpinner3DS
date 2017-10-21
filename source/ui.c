@@ -27,7 +27,7 @@ void uiInit(uistruct* us) {
     us->holdTimer = 0;
     us->indexPos = 0;
     
-    noWidth = pp2d_get_text_width("No (B)", 0.5f, 0.5f);
+    noWidth = pp2d_get_text_width("No \uE001", 0.5f, 0.5f);
 }
 
 // prompts user for input
@@ -51,10 +51,11 @@ int uiPrompt(const char* prompt) {
         
         // display
         pp2d_begin_draw(GFX_TOP);
-            // drawing code goes here
+            pp2d_draw_rectangle(0, 100, 400, 15, GREYFG);
             pp2d_draw_text_center(GFX_TOP, 100, 0.5f, 0.5f, WHITE, prompt);
-            pp2d_draw_text(40,  200, 0.5f, 0.5f, WHITE, "Yes (A)");
-            pp2d_draw_text(360 - noWidth, 200, 0.5f, 0.5f, WHITE, "No (B)");
+            pp2d_draw_rectangle(0, 200, 400, 15, GREYFG);
+            pp2d_draw_text(40,  200, 0.5f, 0.5f, WHITE, "Yes \uE000");
+            pp2d_draw_text(360 - noWidth, 200, 0.5f, 0.5f, WHITE, "No \uE001");
         pp2d_end_draw();
     }
     
@@ -72,7 +73,9 @@ void uiError(const char* error) {
             break;
         
         pp2d_begin_draw(GFX_TOP);
+            pp2d_draw_rectangle(0, 100, 400, 15, GREY);
             pp2d_draw_text_center(GFX_TOP, 100, 0.5f, 0.5f, WHITE, error);
+            pp2d_draw_rectangle(0, 200, 400, 15, GREY);
             pp2d_draw_text_center(GFX_TOP, 200, 0.5f, 0.5f, WHITE, "Press any key to continue.");
         pp2d_end_draw();
     }
@@ -122,11 +125,16 @@ void uiRun(uistruct* us) {
                 if (response == 0) {
                     memset(path, 0, sizeof(path));
                     snprintf(path, 255, "/3ds/data/PayloadSpinner3DS/%s", us->entries[us->entryIndex]);
-                    backup(path);
+                    response = backup(path);
+                    if (response == 0) {
+                        return;
+                        break;
+                    }
                 }
                 
                 break;
             case KEY_START:
+                rebootSystem();
                 return;
                 break;
             default:
@@ -157,8 +165,13 @@ void uiRun(uistruct* us) {
         
         // display
         pp2d_begin_draw(GFX_TOP);
-            // clear
-            //pp2d_draw_rectangle(0, 0, 400, 240, GREYFG);
+            // draw top
+            pp2d_draw_rectangle(0, 0, 400, 15, GREYFG);
+            pp2d_draw_text_center(GFX_TOP, 0, 0.5f, 0.5f, WHITE, "Make a selection.");
+            
+            // draw bottom
+            pp2d_draw_rectangle(0, 220, 400, 20, GREYFG);
+            pp2d_draw_text_center(GFX_TOP, 223, 0.5f, 0.5f, WHITE, "\uE000 and \uE006 to select firm. \uE073 to exit. START to reboot.");
         
             // entry drawing
             max = ((us->indexPos + 13) < us->entryCount) ? us->indexPos + 13 : us->entryCount;

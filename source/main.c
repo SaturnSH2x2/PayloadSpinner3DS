@@ -8,6 +8,7 @@
 
 int main(int argc, char **argv) {
 
+    aptInit();
 	pp2d_init();
     consoleInit(GFX_BOTTOM, NULL);
 
@@ -19,5 +20,6 @@ int main(int argc, char **argv) {
     free(us);
 
 	pp2d_exit();
+    aptExit();
 	return 0;
 }
