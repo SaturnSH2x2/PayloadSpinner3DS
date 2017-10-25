@@ -9,7 +9,7 @@ If you have to ask, this isn't for you.  Simply said, if you see no reason at al
 ## How do I use this?
 First, make sure you have all relevant CFW files ready on your SD Card.  Put your payloads in `3ds/data/PayloadSpinner3DS/`.  From there, install PayloadSpinner3DS, start it up, and select which payload to set as your `boot.firm`.  The application will give you the option to reboot after your `boot.firm` is replaced.
 
-# Features I want to implement eventually
+## Features I want to implement eventually
  - JSON customization (support for custom themes, descriptions for payloads, etc.)
  - idk that's kinda it I guess
 
