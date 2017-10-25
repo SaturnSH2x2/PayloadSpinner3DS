@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <3ds.h>
+#include <jansson.h>
 
 #include "pp2d/pp2d.h"
 #include "filestuff.h"
@@ -51,11 +52,15 @@ int uiPrompt(const char* prompt) {
         
         // display
         pp2d_begin_draw(GFX_TOP);
-            pp2d_draw_rectangle(0, 100, 400, 15, GREYFG);
+            pp2d_draw_rectangle(0, 0, 400, 15, GREYFG);
+            pp2d_draw_rectangle(0, 220, 400, 20, GREYFG);
+        
+            //pp2d_draw_rectangle(0, 100, 400, 15, GREYFG);
             pp2d_draw_text_center(GFX_TOP, 100, 0.5f, 0.5f, WHITE, prompt);
-            pp2d_draw_rectangle(0, 200, 400, 15, GREYFG);
-            pp2d_draw_text(40,  200, 0.5f, 0.5f, WHITE, "Yes \uE000");
-            pp2d_draw_text(360 - noWidth, 200, 0.5f, 0.5f, WHITE, "No \uE001");
+            pp2d_draw_text_center(GFX_TOP, 0, 0.5f, 0.5f, WHITE, "Answer the prompt.");
+            //pp2d_draw_rectangle(0, 200, 400, 15, GREYFG);
+            pp2d_draw_text(40,  223, 0.5f, 0.5f, WHITE, "Yes \uE000");
+            pp2d_draw_text(360 - noWidth, 223, 0.5f, 0.5f, WHITE, "No \uE001");
         pp2d_end_draw();
     }
     

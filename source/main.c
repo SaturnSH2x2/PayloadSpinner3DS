@@ -4,13 +4,17 @@
 
 #include <3ds.h>
 #include "ui.h"
+#include "jsondata.h"
 #include "pp2d/pp2d.h"
 
 int main(int argc, char **argv) {
+    char error[256];
 
     aptInit();
-	pp2d_init();
-    consoleInit(GFX_BOTTOM, NULL);
+    romfsInit();
+    pp2d_init();
+    consoleInit(GFX_TOP, NULL);
+    
 
     uistruct* us = malloc(sizeof(uistruct));
     
@@ -19,7 +23,8 @@ int main(int argc, char **argv) {
     
     free(us);
 
-	pp2d_exit();
+    pp2d_exit();
+    romfsExit();
     aptExit();
-	return 0;
+    return 0;
 }
