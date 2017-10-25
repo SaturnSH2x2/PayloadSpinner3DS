@@ -16,11 +16,6 @@
 
 float noWidth;
 
-// thanks, Kingy    :^)
-void cls() {
-    printf("\e[1;1H\e[2J");
-}
-
 // initializes ui
 void uiInit(uistruct* us) {
     us->entries = listAllFiles("/3ds/data/PayloadSpinner3DS/", &us->entryCount);
@@ -35,6 +30,7 @@ void uiInit(uistruct* us) {
 int uiPrompt(const char* prompt) {
     int result = -1;
     pp2d_set_screen_color(GFX_TOP, GREY);
+    pp2d_set_screen_color(GFX_BOTTOM, GREY);
     
     while (aptMainLoop()) {
         
@@ -62,6 +58,11 @@ int uiPrompt(const char* prompt) {
             pp2d_draw_text(40,  223, 0.5f, 0.5f, WHITE, "Yes \uE000");
             pp2d_draw_text(360 - noWidth, 223, 0.5f, 0.5f, WHITE, "No \uE001");
         pp2d_end_draw();
+        
+        pp2d_begin_draw(GFX_BOTTOM);
+            pp2d_draw_rectangle(0, 0, 320, 20, GREYFG);
+            pp2d_draw_rectangle(0, 220, 320, 240, GREYFG);
+        pp2d_end_draw();
     }
     
     return result;
@@ -69,6 +70,7 @@ int uiPrompt(const char* prompt) {
 
 void uiError(const char* error) {
     pp2d_set_screen_color(GFX_TOP, GREY);
+    pp2d_set_screen_color(GFX_BOTTOM, GREY);
     
     while (aptMainLoop()) {
         hidScanInput();
@@ -83,6 +85,11 @@ void uiError(const char* error) {
             pp2d_draw_rectangle(0, 200, 400, 15, GREY);
             pp2d_draw_text_center(GFX_TOP, 200, 0.5f, 0.5f, WHITE, "Press any key to continue.");
         pp2d_end_draw();
+        
+        pp2d_begin_draw(GFX_BOTTOM);
+            pp2d_draw_rectangle(0, 0, 320, 20, GREYFG);
+            pp2d_draw_rectangle(0, 220, 320, 240, GREYFG);
+        pp2d_end_draw();
     }
 }
 
@@ -96,6 +103,7 @@ void uiRun(uistruct* us) {
     char path[255];
     
     pp2d_set_screen_color(GFX_TOP, GREY);
+    pp2d_set_screen_color(GFX_BOTTOM, GREY);
     
     while (aptMainLoop()) {
         // update
@@ -186,6 +194,14 @@ void uiRun(uistruct* us) {
                     pp2d_draw_rectangle(0, ((i % 13) * 15) + 20, 400, 15, GREYFG);
                 pp2d_draw_text(0, ((i % 13) * 15) + 20, 0.5f, 0.5f, WHITE, us->entries[i]);
             }            
+        pp2d_end_draw();
+        
+        pp2d_begin_draw(GFX_BOTTOM);
+            pp2d_draw_rectangle(0, 0, 320, 20, GREYFG);
+            pp2d_draw_rectangle(0, 220, 320, 240, GREYFG);
+            pp2d_draw_text_center(GFX_BOTTOM, 0, 0.5f, 0.5f, WHITE, "PayloadSpinner3DS");
+            pp2d_draw_text_center(GFX_BOTTOM, 223, 0.5f, 0.5f, WHITE, "BEPISMAN (C) 2017, Licensed Under WTFPL");
+            
         pp2d_end_draw();
     }
 }
