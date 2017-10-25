@@ -11,9 +11,13 @@ int main(int argc, char **argv) {
     romfsInit();
     pp2d_init();
 
-    uistruct* us = malloc(sizeof(uistruct));
-    
+    uistruct* us = malloc(sizeof(uistruct)); 
     uiInit(us);
+    if (us->entries == NULL) {
+        uiError("/3ds/data/PayloadSpinner3DS doesn't exist.");
+        return 0;
+    }
+    
     uiRun(us);
     
     free(us);

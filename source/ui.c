@@ -80,10 +80,10 @@ void uiError(const char* error) {
             break;
         
         pp2d_begin_draw(GFX_TOP);
-            pp2d_draw_rectangle(0, 100, 400, 15, GREY);
+            pp2d_draw_rectangle(0, 0, 400, 15, GREYFG);
+            pp2d_draw_rectangle(0, 220, 400, 20, GREYFG);
             pp2d_draw_text_center(GFX_TOP, 100, 0.5f, 0.5f, WHITE, error);
-            pp2d_draw_rectangle(0, 200, 400, 15, GREY);
-            pp2d_draw_text_center(GFX_TOP, 200, 0.5f, 0.5f, WHITE, "Press any key to continue.");
+            pp2d_draw_text_center(GFX_TOP, 223, 0.5f, 0.5f, WHITE, "Press any key to continue.");
         pp2d_end_draw();
         
         pp2d_begin_draw(GFX_BOTTOM);
