@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <3ds.h>
 #include <jansson.h>
+#include <stdio.h>
 
 #include "pp2d/pp2d.h"
 #include "filestuff.h"
@@ -24,6 +24,17 @@ void uiInit(uistruct* us) {
     us->indexPos = 0;
     
     noWidth = pp2d_get_text_width("No \uE001", 0.5f, 0.5f);
+    
+    FILE *fp;
+    fp = fopen("/3ds/data/PayloadSpinner3DS/current.txt", "r");
+    if (fp == NULL) {
+        snprintf(us->currentFirm, 255, "Not Available");
+        return;
+    }
+    
+    us->currentFirm = malloc(255 * sizeof(char*));
+    fread(us->currentFirm, 255, 1, fp);
+    fclose(fp);
 }
 
 // prompts user for input
@@ -105,6 +116,8 @@ void uiRun(uistruct* us) {
     pp2d_set_screen_color(GFX_TOP, GREY);
     pp2d_set_screen_color(GFX_BOTTOM, GREY);
     
+    FILE *fp = NULL;
+    
     while (aptMainLoop()) {
         // update
         add = 0;
@@ -137,12 +150,22 @@ void uiRun(uistruct* us) {
                 response = uiPrompt(prompt);
                 if (response == 0) {
                     memset(path, 0, sizeof(path));
-                    snprintf(path, 255, "/3ds/data/PayloadSpinner3DS/%s", us->entries[us->entryIndex]);
+                    snprintf(path, 255, "/3ds/data/PayloadSpinner3DS/%s", us->entries[us->entryIndex]);                
+                    
                     response = backup(path);
+                    
+                    fp = fopen("/3ds/data/PayloadSpinner3DS/current.txt", "w+");
+                    fwrite(us->entries[us->entryIndex], 255, 1, fp);
+                    fclose(fp);
+                    fp = NULL;
+                    
                     if (response == 0) {
                         return;
                         break;
                     }
+                                 
+                    snprintf(us->currentFirm, 255, us->entries[us->entryIndex]);
+                    
                 }
                 
                 break;
@@ -199,7 +222,8 @@ void uiRun(uistruct* us) {
         pp2d_begin_draw(GFX_BOTTOM);
             pp2d_draw_rectangle(0, 0, 320, 20, GREYFG);
             pp2d_draw_rectangle(0, 220, 320, 240, GREYFG);
-            pp2d_draw_text_center(GFX_BOTTOM, 0, 0.5f, 0.5f, WHITE, "PayloadSpinner3DS");
+            pp2d_draw_text(0, 3, 0.5f, 0.5f, WHITE, "Current FIRM: ");
+            pp2d_draw_text(100, 3, 0.5f, 0.5f, WHITE, us->currentFirm);
             pp2d_draw_text_center(GFX_BOTTOM, 223, 0.5f, 0.5f, WHITE, "BEPISMAN (C) 2017, Licensed Under WTFPL");
             
         pp2d_end_draw();

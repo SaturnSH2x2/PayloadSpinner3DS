@@ -8,6 +8,8 @@ typedef struct uistruct {
     
     int holdTimer;
     int indexPos;
+    
+    char* currentFirm;
 } uistruct;
 
 void cls();
