@@ -25,6 +25,8 @@ void uiInit(uistruct* us) {
     
     noWidth = pp2d_get_text_width("No \uE001", 0.5f, 0.5f);
     
+    us->currentFirm = malloc(255 * sizeof(char*));
+    
     FILE *fp;
     fp = fopen("/3ds/data/PayloadSpinner3DS/current.txt", "r");
     if (fp == NULL) {
@@ -32,7 +34,6 @@ void uiInit(uistruct* us) {
         return;
     }
     
-    us->currentFirm = malloc(255 * sizeof(char*));
     fread(us->currentFirm, 255, 1, fp);
     fclose(fp);
 }
