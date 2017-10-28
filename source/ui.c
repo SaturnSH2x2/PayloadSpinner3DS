@@ -18,7 +18,7 @@ float noWidth;
 
 // initializes ui
 void uiInit(uistruct* us) {
-    us->entries = listAllFiles("/3ds/data/PayloadSpinner3DS/", &us->entryCount);
+    us->entries = listAllFiles("/3ds/data/PayloadSpinner3DS/payloads/", &us->entryCount);
     us->entryIndex = 0;
     us->holdTimer = 0;
     us->indexPos = 0;
@@ -79,6 +79,20 @@ int uiPrompt(const char* prompt) {
     return result;
 }
 
+void uiLoading() {
+    pp2d_begin_draw(GFX_TOP);
+        pp2d_draw_rectangle(0, 0, 400, 15, GREYFG);
+        pp2d_draw_rectangle(0, 220, 400, 20, GREYFG);
+        
+        pp2d_draw_text_center(GFX_TOP, 100, 0.5f, 0.5f, WHITE, "Please wait.");
+    pp2d_end_draw();
+    
+    pp2d_begin_draw(GFX_BOTTOM);
+        pp2d_draw_rectangle(0, 0, 320, 20, GREYFG);
+        pp2d_draw_rectangle(0, 220, 320, 240, GREYFG);
+    pp2d_end_draw();
+}
+    
 void uiError(const char* error) {
     pp2d_set_screen_color(GFX_TOP, GREY);
     pp2d_set_screen_color(GFX_BOTTOM, GREY);
@@ -126,21 +140,21 @@ void uiRun(uistruct* us) {
         u32 kDown = hidKeysDown();
         
         switch (kDown) {
-            case KEY_UP:
+            case KEY_DUP:
                 us->entryIndex--;
                 break;
-            case KEY_DOWN:
+            case KEY_DDOWN:
                 us->entryIndex++;
                 add = 1;
                 break;
-            case KEY_RIGHT:
+            case KEY_DRIGHT:
                 us->entryIndex = us->entryIndex + 13;
                 if ((us->entryIndex >= us->entryCount) && us->indexPos != ((int)ceil((float)us->entryCount / 13.0) - 1) * 13) {
                     us->entryIndex = us->entryCount - 1;
                 }
                 us->indexPos = us->indexPos + 13;
                 break;
-            case KEY_LEFT:
+            case KEY_DLEFT:
                 us->entryIndex = us->entryIndex - 13;
                 us->indexPos = us->indexPos - 13;
                 break;
@@ -149,8 +163,9 @@ void uiRun(uistruct* us) {
                 snprintf(prompt, 255, "Replace boot.firm with %s?", us->entries[us->entryIndex]);
                 response = uiPrompt(prompt);
                 if (response == 0) {
+                    uiLoading();
                     memset(path, 0, sizeof(path));
-                    snprintf(path, 255, "/3ds/data/PayloadSpinner3DS/%s", us->entries[us->entryIndex]);                
+                    snprintf(path, 255, "/3ds/data/PayloadSpinner3DS/payloads/%s", us->entries[us->entryIndex]);                
                     
                     response = backup(path);
                     

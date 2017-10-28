@@ -48,31 +48,18 @@ char** listAllFiles(const char* path, int* entryC) {
 }
 
 int copyFile(const char* src, const char* dst) {
-    char* fileData;
-    int size;
+    int buf;
     
     FILE* s = fopen(src, "rb");
+    FILE* d = fopen(dst, "w+");
     if (s == NULL)
         return -1;
     
-    fseek(s, 0, SEEK_END);
-    size = ftell(s);
-    printf("filesize is %d\n", size);
-    fseek(s, 0, SEEK_SET);
+    while ((buf = fgetc(s)) != EOF) {
+        fputc(buf, d);
+    }
     
-    // https://stackoverflow.com/a/19247565/8732627
-    fileData = malloc(size + 1);
-    fread(fileData, 1, size, s);
-    fileData[size] = '\0';
     fclose(s);
-    
-    printf("%s", fileData);
-    
-    FILE* d = fopen(dst, "wb");
-    if (d == NULL)
-        return -1;
-    
-    fputs(fileData, d);
     fclose(d);
     
     return 0;

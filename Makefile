@@ -33,6 +33,7 @@ SOURCES		:=	source source/pp2d
 DATA		:=	data
 INCLUDES	:=	include
 ROMFS		:=	romfs
+AUTHOR      :=  B_E_P_I_S_M_A_N
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -143,8 +144,22 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf
-
+	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf $(TARGET)-strip.elf $(TARGET).cia $(TARGET).3ds
+#---------------------------------------------------------------------------------
+$(TARGET)-strip.elf: $(BUILD)
+	@$(STRIP) $(TARGET).elf -o $(TARGET)-strip.elf
+#---------------------------------------------------------------------------------
+cia: $(TARGET)-strip.elf
+	@bannertool makebanner -i assets/banner.png -a assets/sound.wav -o assets/banner.bnr
+	@bannertool makesmdh -s "$(TARGET)" -l "$(TARGET)" -p "$(AUTHOR)" -i assets/icon.png -o assets/icon.icn
+	@makerom -f cia -o $(TARGET).cia -elf $(TARGET)-strip.elf -rsf assets/$(TARGET).rsf -exefslogo -target t -icon assets/icon.icn -banner assets/banner.bnr
+	@echo "built ... $(TARGET).cia"
+#---------------------------------------------------------------------------------
+send: $(BUILD)
+	@3dslink $(TARGET).3dsx
+#---------------------------------------------------------------------------------
+run: $(BUILD)
+	@citra $(TARGET).3dsx
 
 #---------------------------------------------------------------------------------
 else
