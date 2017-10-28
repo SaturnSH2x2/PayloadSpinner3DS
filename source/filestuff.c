@@ -39,6 +39,9 @@ char** listAllFiles(const char* path, int* entryC) {
         }
     }
     
+    if (arrIndex == 0)
+        return NULL;
+    
     closedir(d);
     arrSize--;
     
